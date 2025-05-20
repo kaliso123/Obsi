@@ -1,80 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, useAnimation } from 'framer-motion';
-import logo from '../../assets/ob.png';  // Import the logo if it's in the src/assets folder
+import logo from '../../assets/ob.png';
 
 const AnimatedLogo = () => {
   const [revealed, setRevealed] = useState(false);
-  const [afterEffectStarted, setAfterEffectStarted] = useState(false);
   const crystalControls = useAnimation();
 
-  useEffect(() => {
-  let isMounted = true;
+  // Memoize the initial animation sequence
+  const startRevealAnimation = useMemo(() => ({
+    rotateY: [0, 360],
+    scale: [1, 1],
+    opacity: [0, 1],
+    transition: {
+      duration: 1.5,
+      ease: 'easeOut',
+    },
+  }), []);
 
-  const startReveal = async () => {
-    if (!isMounted) return;
+  // Memoize the continuous animation sequence with reduced complexity
+  const continuousAnimation = useMemo(() => ({
+    scale: [1, 1.05, 1],
+    opacity: [1, 1],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: 'easeInOut',
+    },
+  }), []);
 
-    await crystalControls.start({
-      rotateY: [0, 723],
-      scale: [1.5, 1],
-      opacity: [0, 1],
-      transition: {
-        duration: 2.5,
-        ease: 'easeInOut',
-      },
-    });
+  // Memoize background styles
+  const backgroundStyle = useMemo(() => ({
+    width: '100%',
+    height: '100%',
+    backgroundImage: `url(${logo})`,
+    backgroundSize: 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    willChange: 'transform',
+  }), []);
 
-    if (!isMounted) return;
+  const startReveal = useCallback(async () => {
+    await crystalControls.start(startRevealAnimation);
     setRevealed(true);
+    crystalControls.start(continuousAnimation);
+  }, [crystalControls, startRevealAnimation, continuousAnimation]);
 
-    crystalControls.start({
-      scale: [1, 1.1, 1],
-      opacity: [1, 1],
-      transition: {
-        y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-        rotateY: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-        rotateX: { duration: 5, repeat: Infinity, ease: 'easeInOut' },
-        scale: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-      },
-    });
-
-    setTimeout(() => {
-      if (isMounted) setAfterEffectStarted(true);
-    }, 2000);
-  };
-
-  startReveal();
-
-  return () => {
-    isMounted = false; // Cleanup function
-  };
-}, []);
-
+  useEffect(() => {
+    const timeoutId = setTimeout(startReveal, 100);
+    return () => clearTimeout(timeoutId);
+  }, [startReveal]);
 
   return (
     <div className="w-[300px] h-[400px] relative flex items-center justify-center">
-      {/* Crystal logo with reveal spin and floating */}
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}
         animate={crystalControls}
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(${logo})`,  // Use the imported logo here
-          backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          filter: 'drop-shadow(0 20px 30px rgba(59, 130, 246, 0.6))',
-          transformStyle: 'preserve-3d',
-        }}
+        style={backgroundStyle}
         className="absolute inset-0"
       />
 
-      {/* Glowing background */}
       {revealed && (
         <motion.div
           animate={{
-            scale: [1, 1.4, 1],
-            opacity: [0.15, 0.3, 0.15],
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.2, 0.1],
           }}
           transition={{
             duration: 3,
@@ -83,30 +72,8 @@ const AnimatedLogo = () => {
           }}
           className="absolute inset-0 rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(59,130,246,0.3), transparent)',
-            filter: 'blur(100px)',
-            zIndex: -1,
-          }}
-        />
-      )}
-
-      {/* After-effect: Fading, glowing effect */}
-      {afterEffectStarted && (
-        <motion.div
-          animate={{
-            opacity: [0.2, 0.5, 0.2],
-            scale: [1, 1.05, 1],
-            filter: ['blur(50px)', 'blur(0px)', 'blur(50px)'],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(59,130,246,0.3), transparent)',
-            zIndex: -1,
+            background: 'radial-gradient(circle, rgba(59,130,246,0.2), transparent)',
+            willChange: 'transform, opacity',
           }}
         />
       )}
@@ -114,4 +81,4 @@ const AnimatedLogo = () => {
   );
 };
 
-export default AnimatedLogo;
+export default React.memo(AnimatedLogo);
