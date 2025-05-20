@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../UI/Button';
-import AnimatedLogo from '../UI/AnimatedLogo';
 
 const HeroSection = () => {
   const heroRef = useRef(null);
@@ -57,7 +56,6 @@ const HeroSection = () => {
     { text: "Success", className: "text-obsidium-300" }
   ];
 
-  // Generate random positions once when the component mounts
   const backgroundElements = useMemo(() => {
     return [...Array(5)].map(() => ({
       width: Math.random() * 300 + 100,
@@ -93,20 +91,17 @@ const HeroSection = () => {
       </div>
 
       <div className="absolute inset-0 bg-gradient-radial from-obsidium-500/20 to-transparent"></div>
-      
+
       <div className="container mx-auto px-4 relative z-10 py-20 lg:py-0">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="flex flex-col items-center justify-center gap-12">
           <motion.div 
-            className="max-w-2xl text-center lg:text-left"
+            className="max-w-2xl text-center"
             initial="hidden"
             animate="visible"
             variants={textContainer}
           >
-            <motion.div 
-              className="mb-8"
-              variants={textContainer}
-            >
-              <div className="flex flex-wrap justify-center lg:justify-start gap-x-3 gap-y-2">
+            <motion.div className="mb-8" variants={textContainer}>
+              <div className="flex flex-wrap justify-center gap-x-3 gap-y-2">
                 {titleWords.map((word, i) => (
                   <motion.span
                     key={i}
@@ -121,14 +116,14 @@ const HeroSection = () => {
 
             <motion.p 
               variants={fadeIn}
-              className="text-base sm:text-lg lg:text-xl text-obsidium-100 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0"
+              className="text-base sm:text-lg lg:text-xl text-obsidium-100 mb-8 leading-relaxed max-w-xl mx-auto"
             >
               From stunning websites to powerful web applications, we bring your digital vision to life with expert design and development.
             </motion.p>
-            
+
             <motion.div 
               variants={fadeIn}
-              className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4"
+              className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4"
             >
               <Button 
                 to="/contact" 
@@ -138,27 +133,14 @@ const HeroSection = () => {
                 className="bg-obsidium-500 hover:bg-obsidium-600 group w-full sm:w-auto"
               >
                 <span className="group-hover:translate-x-1 transition-transform">
-                Let's work together
+                  Let's work together
                 </span>
               </Button>
-             
             </motion.div>
-          </motion.div>
-          
-          <motion.div 
-            className="w-full lg:w-1/2 flex justify-center relative"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <div className="absolute inset-0 bg-gradient-radial from-obsidium-500/30 to-transparent blur-3xl"></div>
-            <div className="w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[400px] xl:max-w-[500px]">
-              <AnimatedLogo className="w-full h-full" />
-            </div>
           </motion.div>
         </div>
       </div>
-      
+
       <motion.div 
         className="absolute bottom-8 left-0 right-0 flex justify-center"
         initial={{ opacity: 0, y: 20 }}
@@ -170,8 +152,8 @@ const HeroSection = () => {
           className="animate-bounce text-obsidium-300 hover:text-obsidium-200 transition-colors"
           aria-label="Scroll down"
         >
-          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </a>
       </motion.div>
