@@ -57,7 +57,7 @@ const ServiceAccordion = ({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-6 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 dark:border-gray-800">
+            <div className="px-6 sm:px-8 pb-6 sm:pb-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6">
                 <div className="order-2 lg:order-1">
                   <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
