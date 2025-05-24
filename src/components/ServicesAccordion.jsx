@@ -40,7 +40,7 @@ const ServiceAccordion = ({
           </div>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3 }}
             className="flex-shrink-0 text-gray-500 dark:text-gray-400 ml-4"
           >
             <ChevronDown size={24} />
@@ -54,9 +54,10 @@ const ServiceAccordion = ({
             initial={{ height: 0 }}
             animate={{ height: "auto" }}
             exit={{ height: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
           >
-            <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+            <div className="px-6 sm:px-8 pb-6 sm:pb-8 border-t border-gray-100 dark:border-gray-800">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6">
                 <div className="order-2 lg:order-1">
                   <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -66,9 +67,9 @@ const ServiceAccordion = ({
                     {features.map((feature, index) => (
                       <motion.li
                         key={index}
-                        initial={{ opacity: 0, x: -5 }}
+                        initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ delay: index * 0.1, duration: 0.2 }}
                         className="flex items-start gap-3"
                       >
                         <CheckCircle size={20} className="text-obsidium-500 mt-0.5 flex-shrink-0" />
@@ -81,19 +82,19 @@ const ServiceAccordion = ({
                 </div>
 
                 <div className="order-1 lg:order-2">
-                  <div className="relative rounded-lg overflow-hidden shadow-lg">
-                    {!imageLoaded && (
-                      <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
-                    )}
+                  <div className="relative rounded-lg overflow-hidden shadow-lg aspect-video">
                     <img
                       src={image}
                       alt={title}
-                      className={`w-full h-full object-cover transition-opacity duration-200 ${
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${
                         imageLoaded ? 'opacity-100' : 'opacity-0'
                       }`}
                       loading="lazy"
                       onLoad={() => setImageLoaded(true)}
                     />
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                   </div>
                 </div>
