@@ -1,76 +1,92 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import logo from '../../assets/ob.png';
 
 const AnimatedLogo = () => {
   const [revealed, setRevealed] = useState(false);
-  const controls = useAnimation();
 
-  // Static styles don't need useMemo
-  const backgroundStyle = {
-    width: '100%',
-    height: '100%',
-    backgroundImage: `url(${logo})`,
-    backgroundSize: 'contain',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    willChange: 'transform',
-  };
+  // Memoize animation variants to prevent recreating on each render
+  const animationVariants = useMemo(() => ({
+    initial: { 
+      scale: 0.8,
+      opacity: 0,
+      filter: 'blur(10px)',
+      transform: 'translateZ(0)' // Force GPU acceleration
+    },
+    animate: {
+      scale: 1,
+      opacity: 1,
+      filter: 'blur(0px)',
+      transition: {
+        duration: 1.2,
+        ease: 'easeOut'
+      }
+    }
+  }), []);
+
+  // Memoize styles to prevent recreation
+  const styles = useMemo(() => ({
+    container: {
+      width: '300px',
+      height: '400px',
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      willChange: 'transform', // Optimize animations
+      transform: 'translateZ(0)' // Force GPU acceleration
+    },
+    logo: {
+      width: '100%',
+      height: '100%',
+      backgroundImage: `url(${logo})`,
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      filter: 'drop-shadow(0 10px 15px rgba(59, 130, 246, 0.3))',
+      willChange: 'transform, opacity', // Optimize animations
+      transform: 'translateZ(0)' // Force GPU acceleration
+    },
+    glow: {
+      position: 'absolute',
+      inset: '0',
+      background: 'radial-gradient(circle, rgba(59,130,246,0.2), transparent)',
+      filter: 'blur(40px)',
+      opacity: 0.5,
+      willChange: 'transform, opacity', // Optimize animations
+      transform: 'translateZ(0)' // Force GPU acceleration
+    }
+  }), []);
 
   useEffect(() => {
-    const sequence = async () => {
-      await controls.start({
-        rotateY: [0, 360],
-        opacity: [0, 1],
-        transition: {
-          duration: 1.5,
-          ease: 'easeOut',
-        },
-      });
+    // Delay the reveal animation slightly
+    const timer = setTimeout(() => {
       setRevealed(true);
-      controls.start({
-        scale: [1, 1.05, 1],
-        transition: {
-          duration: 3,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        },
-      });
-    };
+    }, 100);
 
-    const timeout = setTimeout(sequence, 100);
-    return () => clearTimeout(timeout);
-  }, [controls]);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="w-[300px] h-[400px] relative flex items-center justify-center">
+    <div style={styles.container}>
       <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={controls}
-        style={backgroundStyle}
-        className="absolute inset-0"
+        initial="initial"
+        animate={revealed ? "animate" : "initial"}
+        variants={animationVariants}
+        style={styles.logo}
       />
-
+      
       {revealed && (
         <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(59,130,246,0.2), transparent)',
-            willChange: 'transform, opacity',
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ duration: 1 }}
+          style={styles.glow}
         />
       )}
     </div>
   );
 };
 
+// Prevent unnecessary re-renders
 export default React.memo(AnimatedLogo);
