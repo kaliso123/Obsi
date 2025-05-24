@@ -11,6 +11,7 @@ const ServiceAccordion = ({
   image
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
@@ -50,9 +51,9 @@ const ServiceAccordion = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
@@ -66,9 +67,9 @@ const ServiceAccordion = ({
                     {features.map((feature, index) => (
                       <motion.li
                         key={index}
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                        transition={{ delay: index * 0.1, duration: 0.2 }}
                         className="flex items-start gap-3"
                       >
                         <CheckCircle size={20} className="text-obsidium-500 mt-0.5 flex-shrink-0" />
@@ -81,20 +82,21 @@ const ServiceAccordion = ({
                 </div>
 
                 <div className="order-1 lg:order-2">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="relative rounded-lg overflow-hidden shadow-lg aspect-video"
-                  >
+                  <div className="relative rounded-lg overflow-hidden shadow-lg aspect-video">
                     <img
                       src={image}
                       alt={title}
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${
+                        imageLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
                       loading="lazy"
+                      onLoad={() => setImageLoaded(true)}
                     />
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </div>
