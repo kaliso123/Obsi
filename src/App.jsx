@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import PortfolioPage from './pages/PortfolioPage';
 import ContactPage from './pages/ContactPage';
+import EmailSignaturePage from './pages/EmailSignaturePage';
 import NotFoundPage from './pages/NotFoundPage';
 import ScrollRestoration from './components/UI/ScrollRestoration';
 import CookieConsent from './components/UI/CookieConsent';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/emailsignature" element={<EmailSignaturePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>
